@@ -93,12 +93,18 @@ bindkey "^T" history-incremental-search-forward
 
 export EDITOR='vim'
 
+# use vim as a pager
+export PAGER=~/bin/vimpager
+alias less=$PAGER
+alias zless=$PAGER
+
 # open cpp and hpp file with vim
 alias -s cpp=vim
 alias -s hpp=vim
 
 # aliases
 alias ls='ls --color=auto --group-directories-first'
+alias ll='ls --color=auto --group-directories-first -lah'
 alias df='df -h'
 alias bc='bc -l' #enable floating point computations by default
 alias grep='grep --color'
@@ -106,7 +112,13 @@ alias ip='ipython notebook --pylab inline'
 alias astyle='astyle -T'
 alias zsh-reload='. ~/.zshrc'
 alias gnuplot='gnuplot -'
+alias spellcheck='aspell -c'
 alias md='pandoc -f markdown -t html'
+alias ai='sudo apt-get install'
+alias as='apt-cache search'
+function mdp() {
+	perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
+}
 
 # okular makes too much noise
 function okular() {
@@ -134,3 +146,7 @@ function calc() {
 
 # load computer names
 . ~/.computers
+
+# map caps lock to escape
+xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+

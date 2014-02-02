@@ -8,7 +8,11 @@ call vundle#rc()
 "  " required! 
 Bundle 'gmarik/vundle'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'altercation / vim-colors-solarized'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'molokai'
+Bundle 'snipMate'
+Bundle 'taglist.vim'
+Bundle 'Command-T'
 filetype plugin indent on     " required!
 filetype on
 
@@ -42,6 +46,8 @@ let g:clang_use_library=1
 " no backup files
 set nobackup
 set nowritebackup
+" no swap file
+set noswapfile
 
 " more space for the command line
 " among other things gets rid of pressing enter twice after make
@@ -55,3 +61,7 @@ set tabstop=4
 colorscheme myevening
 " disable bold fonts (since I already use bold fonts in the terminal emulator)
 set t_md=
+
+" maps
+nmap ct <ESC>:CommandT<CR>
+nmap tl <ESC>:TlistOpen<CR>

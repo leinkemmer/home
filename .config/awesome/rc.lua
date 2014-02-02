@@ -10,6 +10,9 @@ require("naughty")
 -- Load Debian menu entries
 require("debian.menu")
 
+-- quake style menu
+local scratch = require("scratch")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -253,7 +256,9 @@ globalkeys = awful.util.table.join(
                   mypromptbox[mouse.screen].widget,
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
-              end)
+              end),
+
+    awful.key({ modkey }, "a", function () scratch.drop("xterm", "top", "center", 1.0, 0.4) end)
 )
 
 clientkeys = awful.util.table.join(
@@ -433,4 +438,4 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-
+os.execute("setxkbmap -option grp:alt_shift_toggle \"us,de\"")
