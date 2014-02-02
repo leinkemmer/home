@@ -8,7 +8,7 @@ To install use
 	git clone https://github.com/leinkemmer/home.git
 	git submodule init
 	git submodule update
-	./install
+	./install.sh
 	vim +BundleInstall
 
 
