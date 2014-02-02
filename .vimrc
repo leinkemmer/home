@@ -13,6 +13,7 @@ Bundle 'molokai'
 Bundle 'snipMate'
 Bundle 'taglist.vim'
 Bundle 'Command-T'
+Bundle 'a.vim'
 filetype plugin indent on     " required!
 filetype on
 
