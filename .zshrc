@@ -94,7 +94,7 @@ bindkey "^T" history-incremental-search-forward
 export EDITOR='vim'
 
 # use vim as a pager
-export PAGER=~/bin/vimpager
+export PAGER=vimpager
 alias less=$PAGER
 alias zless=$PAGER
 
@@ -109,13 +109,14 @@ alias df='df -h'
 alias bc='bc -l' #enable floating point computations by default
 alias grep='grep --color'
 alias ip='ipython notebook --pylab inline'
-alias astyle='astyle -T'
+alias astyle='astyle --indent=tab --style=java --delete-empty-lines'
 alias zsh-reload='. ~/.zshrc'
 alias gnuplot='gnuplot -'
 alias spellcheck='aspell -c'
 alias md='pandoc -f markdown -t html'
 alias ai='sudo apt-get install'
 alias as='apt-cache search'
+alias sync-nas='rsync -aP ~/sync $nas:/share/MD0_DATA/homes/lukas'
 function mdp() {
 	perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
 }
@@ -131,6 +132,14 @@ function mpdf() {
 	pdflatex $1
 	pdflatex $1
 }
+function mpdfd() {
+	pdflatex $1
+	bibtex ${1%.tex}
+	pdflatex $1
+	pdflatex $1
+	rm ${1%.tex}.log ${1%.tex}.aux ${1%.tex}.nav ${1%.tex}.out ${1%.tex}.toc ${1%.tex}.blg ${1%.tex}.bbl
+}
+
 # show battery status
 function battery() {
 	acpi
@@ -148,5 +157,13 @@ function calc() {
 . ~/.computers
 
 # map caps lock to escape
-xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+(nohup xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape' > /dev/null 2> /dev/null &) > /dev/null 2> /dev/null
 
+xset -b # turn beep off
+xset s off # turn x black screen saver off
+
+PATH="/home/lukas/perl5/bin${PATH+:}${PATH}"; export PATH;
+PERL5LIB="/home/lukas/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/lukas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/lukas/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/lukas/perl5"; export PERL_MM_OPT;
