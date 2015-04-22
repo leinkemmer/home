@@ -14,6 +14,8 @@ Bundle 'snipMate'
 Bundle 'taglist.vim'
 Bundle 'Command-T'
 Bundle 'a.vim'
+Bundle 'vim-scripts/vim-auto-save'
+Bundle 'Rip-Rip/clang_complete'
 filetype plugin indent on     " required!
 filetype on
 syntax on
@@ -44,6 +46,8 @@ set conceallevel=2
 
 " clang-complete
 let g:clang_use_library=1
+inoremap <C-@> <C-x><C-u>
+set completeopt=menu,preview
 
 " no backup files
 set nobackup
@@ -70,8 +74,7 @@ set t_md=
 nmap ct <ESC>:CommandT<CR>
 nmap tl <ESC>:TlistOpen<CR>
 
-set spell
-
+"set spell
 
 " not so trivial does not consider if but mathches the } in the next line
 "set foldmethod=expr foldexpr=GetFoldLevel(v:lnum)
@@ -88,4 +91,16 @@ set spell
 "   endif 
 "   return '=' 
 "endfunction 
+
+" autoamtically save to disk
+let g:auto_save = 1
+
+au BufRead,BufNewFile *.gnuplot		set filetype=gnuplot
+au BufRead,BufNewFile *.gnu			set filetype=gnuplot
+
+autocmd filetype gnuplot nnoremap <F4> :w <bar> exec '!gnuplot '.shellescape('%')<CR>
+autocmd filetype c   nnoremap <F4> :w <bar> make<CR>
+autocmd filetype cpp nnoremap <F4> :w <bar> make<CR>
+autocmd filetype python nnoremap <F4> :w <bar> exec '!python '.shellescape('%')<CR>
+autocmd filetype tex nnoremap <F4> :LLPStartPreview<CR>
 

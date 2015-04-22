@@ -127,17 +127,23 @@ function okular() {
 }
 # complete pdflatex build (including bibtex)
 function mpdf() {
-	pdflatex $1
-	bibtex ${1%.tex}
-	pdflatex $1
-	pdflatex $1
+	for file in *.tex; do
+		echo "=============================="
+		echo "processing: $file"
+		echo "=============================="
+		pdflatex $file
+		bibtex ${file%.tex}
+		pdflatex $file
+		pdflatex $file
+		latexmk -c
+	done
 }
 function mpdfd() {
 	pdflatex $1
 	bibtex ${1%.tex}
 	pdflatex $1
 	pdflatex $1
-	rm ${1%.tex}.log ${1%.tex}.aux ${1%.tex}.nav ${1%.tex}.out ${1%.tex}.toc ${1%.tex}.blg ${1%.tex}.bbl
+	%rm ${1%.tex}.log ${1%.tex}.aux ${1%.tex}.nav ${1%.tex}.out ${1%.tex}.toc ${1%.tex}.blg ${1%.tex}.bbl
 }
 
 # show battery status
@@ -162,8 +168,9 @@ function calc() {
 xset -b # turn beep off
 xset s off # turn x black screen saver off
 
-PATH="/home/lukas/perl5/bin${PATH+:}${PATH}"; export PATH;
+PATH="/home/lukas/perl5/bin:/opt/intel/composer_xe_2015/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/lukas/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/lukas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/lukas/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/lukas/perl5"; export PERL_MM_OPT;
+
