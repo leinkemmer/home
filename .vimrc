@@ -66,9 +66,15 @@ set shiftwidth=4
 set tabstop=4
 
 " colorscheme
-colorscheme github
+colorscheme molokai
 " disable bold fonts (since I already use bold fonts in the terminal emulator)
 set t_md=
+
+" make fonts a bit larger in the gui
+set guifont=Monospace\ 11
+
+" use the molokai color scheme in the terminal
+set t_Co=256
 
 " maps
 nmap ct <ESC>:CommandT<CR>
