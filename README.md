@@ -11,4 +11,8 @@ To install use
 	./install.sh
 	vim +BundleInstall
 
+Notes
+=====
 
+- The submodule is used to fetch the vundle plugin manager which then installs the remaining plugins.
+- The scripts in bin have to be installed manually (if necessary).

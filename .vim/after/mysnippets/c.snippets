@@ -1,0 +1,33 @@
+#
+# custom C snippets
+# style is adapted (no spaces before paranthesis)
+# simplified some of the snippets (removed arguments)
+# 
+# for loop with 
+snippet for "for loop (for)"
+for(int ${2:i}=0;$2<${1:count};$2++) {
+	${VISUAL}${0}
+}
+endsnippet
+
+#if
+snippet if "if (if)"
+if(${1:condition}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+# else if
+snippet eli "else if .. (eli)"
+else if(${1:condition}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+#else
+snippet el "else (el)"
+else {
+	${VISUAL}${0}
+}
+endsnippet
+

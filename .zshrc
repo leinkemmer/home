@@ -108,7 +108,7 @@ alias ll='ls --color=auto --group-directories-first -lah'
 alias df='df -h'
 alias bc='bc -l' #enable floating point computations by default
 alias grep='grep --color'
-alias ip='ipython notebook --pylab inline'
+alias ip='ipython notebook'
 alias astyle='astyle --indent=tab --style=java --delete-empty-lines'
 alias zsh-reload='. ~/.zshrc'
 alias gnuplot='gnuplot -'
@@ -116,10 +116,19 @@ alias spellcheck='aspell -c'
 alias md='pandoc -f markdown -t html'
 alias ai='sudo apt-get install'
 alias as='apt-cache search'
+alias pi='yaourt -S'
+alias arch-update='yaourt -Syu'
 alias sync-nas='rsync -aP ~/sync $nas:/share/MD0_DATA/homes/lukas'
 function mdp() {
 	perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
 }
+
+# vpn
+# this requires to add
+# lukas ALL=(root) NOPASSWD: /usr/bin/uibk
+# using visudo
+# and that the openconnect script exists in the path
+alias uibk='sudo uibk'
 
 # okular makes too much noise
 function okular() {
@@ -165,6 +174,10 @@ function calc() {
 # map caps lock to escape
 (nohup xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape' > /dev/null 2> /dev/null &) > /dev/null 2> /dev/null
 
+# change between german and english layout
+alias enkeyb='setxkbmap -layout us'
+alias dekeyb='setxkbmap -layout de'
+
 xset -b # turn beep off
 xset s off # turn x black screen saver off
 
@@ -174,3 +187,11 @@ PERL_LOCAL_LIB_ROOT="/home/lukas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_R
 PERL_MB_OPT="--install_base \"/home/lukas/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/lukas/perl5"; export PERL_MM_OPT;
 
+touch $HOME/.dbus/Xdbus
+chmod 600 $HOME/.dbus/Xdbus
+env | grep DBUS_SESSION_BUS_ADDRESS > $HOME/.dbus/Xdbus
+echo 'export DBUS_SESSION_BUS_ADDRESS' >> $HOME/.dbus/Xdbus
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64/
+
+. /etc/profile.d/vte.sh # Bug in arch (http://unix.stackexchange.com/questions/93476/gnome-terminal-keep-track-of-directory-in-new-tab)
