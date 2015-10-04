@@ -13,7 +13,7 @@ To install use
 
 To use command-t
 
-	apt-get install vim-nox ruby-dev is required)  # in Ubuntu (to get ruby support)
+	sudo apt-get install vim-nox ruby-dev # in Ubuntu (to get ruby support)
 	cd ~/.vim/bundle/Command-T/ruby/command-t
   ruby extconf.rb
 	make
