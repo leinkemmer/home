@@ -11,6 +11,14 @@ To install use
 	./install.sh
 	vim +BundleInstall
 
+To use command-t
+
+	apt-get install vim-nox ruby-dev is required)  # in Ubuntu (to get ruby support)
+	cd ~/.vim/bundle/Command-T/ruby/command-t
+  ruby extconf.rb
+	make
+
+
 Notes
 =====
 
