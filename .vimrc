@@ -79,8 +79,8 @@ set guioptions-=L  "remove left-hand scroll bar
 " display linenumbers
 set number
 " highlight long lines in red
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"match OverLength /\%81v.\+/
 
 "
 " vim-latexsuite with pdf as default output
@@ -141,3 +141,16 @@ nmap ; <Leader>ci
 map <C-K> :pyf /usr/share/clang/clang-format.py<cr>
 imap <C-K> <c-o>:pyf /usr/share/clang/clang-format.py<cr>
 
+"
+" CUDA
+"
+au BufRead,BufNewFile *.cu set filetype=cpp
+
+" linebreak at 80
+set textwidth=80
+
+" doxygen support
+autocmd FileType c,cpp set comments-=://
+autocmd FileType c,cpp set comments+=:///
+autocmd FileType c,cpp set comments+=://
+ 

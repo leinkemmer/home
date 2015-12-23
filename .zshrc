@@ -123,6 +123,10 @@ function mdp() {
 	perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
 }
 
+# mount encrypted volume
+alias mount-personal='encfs ~/Dropbox/personal-encfs  ~/personal'
+alias umount-personal='fusermount -u ~/personal'
+
 # vpn
 # this requires to add
 # lukas ALL=(root) NOPASSWD: /usr/bin/uibk
@@ -132,8 +136,13 @@ alias uibk='sudo uibk'
 
 # okular makes too much noise
 function okular() {
-	/usr/bin/okular $@ > /tmp/okular.stdout 2>&1
+	/usr/bin/okular $@ > /dev/null 2>&1 &
 }
+# evince does the same
+function evince() {
+  /usr/bin/evince $@ > /dev/null 2>&1 &
+}
+
 # complete pdflatex build (including bibtex)
 function mpdf() {
 	for file in *.tex; do
@@ -178,6 +187,9 @@ function calc() {
 alias enkeyb='setxkbmap -layout us'
 alias dekeyb='setxkbmap -layout de'
 
+# get last argument with Esc+. as in bash
+bindkey '\e.' insert-last-word
+
 xset -b # turn beep off
 xset s off # turn x black screen saver off
 
@@ -187,6 +199,8 @@ PERL_LOCAL_LIB_ROOT="/home/lukas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_R
 PERL_MB_OPT="--install_base \"/home/lukas/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/lukas/perl5"; export PERL_MM_OPT;
 
+#export PATH="$PATH:/usr/local/berkeley_upc/bin/"
+
 touch $HOME/.dbus/Xdbus
 chmod 600 $HOME/.dbus/Xdbus
 env | grep DBUS_SESSION_BUS_ADDRESS > $HOME/.dbus/Xdbus
@@ -195,3 +209,5 @@ echo 'export DBUS_SESSION_BUS_ADDRESS' >> $HOME/.dbus/Xdbus
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64/
 
 . /etc/profile.d/vte.sh # Bug in arch (http://unix.stackexchange.com/questions/93476/gnome-terminal-keep-track-of-directory-in-new-tab)
+
+source /opt/intel/composer_xe_2015/bin/compilervars.sh intel64
