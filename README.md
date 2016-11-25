@@ -25,5 +25,5 @@ Notes
 - The scripts in bin have to be installed manually (if necessary). A possible crontab entry for battery-check is
 */1 * * * * /usr/bin/battery-check.sh
 
-The .desktop files have to be installed manually (if necessary) to ~/.config/autostart
+- The .desktop files have to be installed manually (if necessary) to ~/.config/autostart
 
