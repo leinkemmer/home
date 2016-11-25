@@ -25,10 +25,6 @@ Bundle "scrooloose/nerdcommenter"
 Bundle 'Command-T'
 " show definitions in current file
 Bundle 'taglist.vim'
-" required for vim-easytags
-Bundle "xolox/vim-misc"
-" automatically generate ctags
-Bundle "xolox/vim-easytags"
 " snippet engine
 Bundle 'SirVer/ultisnips'
 " snippets for ultisnip
@@ -64,13 +60,13 @@ let g:UltiSnipsSnippetDirectories=["mysnippets"]
 "
 " customize appearence
 "
-colorscheme molokai
+colorscheme github
 " disable bold fonts (bold fonts are already used in the terminal emulator)
 set t_md=
 " use the molokai color scheme in the terminal
 set t_Co=256
 " make fonts a bit larger in the gui
-set guifont=Monospace\ 11
+set guifont=Inconsolata\ Bold\ 12
 " show more code in the gui version
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
@@ -99,11 +95,11 @@ let g:livepreview_previewer = 'okular'
 "
 " indentation and programming
 "
-" indent using tabs
+" indent using spaces
 set autoindent
-set noexpandtab
-set shiftwidth=2
-set tabstop=2
+set expandtab
+set tabstop=4
+set shiftwidth=4
 " indent preprocessor directives as normal C code
 set cinkeys-=0#
 " syntax highlighting for gnuplot and gnu files
@@ -122,10 +118,11 @@ nmap ct <ESC>:CommandT<CR>
 nmap tl <ESC>:TlistOpen<CR>
 " compile using F4
 autocmd filetype gnuplot nnoremap <F4> :w <bar> exec '!gnuplot '.shellescape('%')<CR>
-autocmd filetype c   nnoremap <F4> :w <bar> make<CR>
+"autocmd filetype c   nnoremap <F4> :w <bar> make<CR>
+autocmd filetype c   nnoremap <F4> :w <bar> exec '!tup upd'<CR>
 autocmd filetype cpp nnoremap <F4> :w <bar> make<CR>
 autocmd filetype python nnoremap <F4> :w <bar> exec '!python '.shellescape('%')<CR>
-autocmd filetype tex nnoremap <F4> :!pdflatex %<CR>
+autocmd filetype tex nnoremap <F4> :!latexmk -pdf %<CR>
 " use Tab to expand snippet and move to next placeholder, C-z jumps back
 let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
@@ -137,6 +134,7 @@ set listchars=tab:▸\ ,eol:¬
 nnoremap gd g<C-]>
 " use ; to toggle comments 
 nmap ; <Leader>ci
+let g:NERDCustomDelimiters = { 'c': { 'left': '//','right': '' } } " also in C we want to use // and not /* */
 " run clang-format on the current file
 map <C-K> :pyf /usr/share/clang/clang-format.py<cr>
 imap <C-K> <c-o>:pyf /usr/share/clang/clang-format.py<cr>
@@ -146,11 +144,19 @@ imap <C-K> <c-o>:pyf /usr/share/clang/clang-format.py<cr>
 "
 au BufRead,BufNewFile *.cu set filetype=cpp
 
-" linebreak at 80
-set textwidth=80
 
+"
 " doxygen support
+"
 autocmd FileType c,cpp set comments-=://
 autocmd FileType c,cpp set comments+=:///
 autocmd FileType c,cpp set comments+=://
- 
+
+"
+" easymotion colors
+"
+hi link EasyMotionTarget ErrorMsg
+hi link EasyMotionShade  Comment
+hi link EasyMotionTarget2First Search
+hi link EasyMotionTarget2Second Search
+

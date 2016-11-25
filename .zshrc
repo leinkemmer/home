@@ -25,50 +25,50 @@ autoload -U colors && colors
 
 # get background jobs
 function get_jobs() {
-  # the variable psvar can then be used in the prompt with the %v parameter
-  psvar=`jobs | grep '^\[' |  sed  's/.*  //g' | grep -o '^[^[:space:]]*' | tr '\n' '|' | rev | cut -c 2- | rev`
+    # the variable psvar can then be used in the prompt with the %v parameter
+    psvar=`jobs | grep '^\[' |  sed  's/.*  //g' | grep -o '^[^[:space:]]*' | tr '\n' '|' | rev | cut -c 2- | rev`
 }
 # get the walltime of a computation
 function timer_start() {
-  timer=${timer:-$SECONDS}
+    timer=${timer:-$SECONDS}
 }
 function preexec() {
-  timer=$SECONDS
-  # reset color of the command entered and display the output in the usual manner (-n tells echo to suppress the customary linebreak)
-  echo -n "$reset_color" 
+    timer=$SECONDS
+    # reset color of the command entered and display the output in the usual manner (-n tells echo to suppress the customary linebreak)
+    echo -n "$reset_color"
 }
 # convert seconds to hours/minutes/seconds
 function convertsecs() {
- ((h=${1}/3600))
- ((m=(${1}%3600)/60))
- ((s=${1}%60))
- printf "%02d:%02d:%02d\n" $h $m $s
+    ((h=${1}/3600))
+    ((m=(${1}%3600)/60))
+    ((s=${1}%60))
+    printf "%02d:%02d:%02d\n" $h $m $s
 }
 
 # execute before new shell appears
 function precmd() {
-  if [[ -n "$timer" ]] # checks if timer is set to something
-  then
-    result=$(($SECONDS-$timer))
-    pp=$(convertsecs $result)
-    if [[ $result -gt 2 ]]
+    if [[ -n "$timer" ]] # checks if timer is set to something
     then
-      echo "$fg_bold[yellow]Walltime" "$pp" "$reset_color"
+        result=$(($SECONDS-$timer))
+        pp=$(convertsecs $result)
+        if [[ $result -gt 2 ]]
+        then
+            echo "$fg_bold[magenta]Walltime" "$pp" "$reset_color"
+        fi
+        unset timer
     fi
-    unset timer
-  fi
-  get_jobs
+    get_jobs
 }
 
-# set the prompt (yellow if ssh is used otherwise red)
+# set the prompt (magenta if ssh is used otherwise red)
 if [ -z "$SSH_CLIENT" ]; then
-PROMPT="%{$bg_bold[red]%} %{$reset_color%} %{$fg_bold[red]%}%m [%*] [%v]%{$reset_color%} %{$fg_bold[red]%}%~ %{$reset_color%}%
+    PROMPT="%{$bg_bold[red]%} %{$reset_color%} %{$fg_bold[red]%}%m [%*] [%v]%{$reset_color%} %{$fg_bold[red]%}%~ %{$reset_color%}%
 
-%{$bg_bold[red]%} %{$reset_color%} "
+    %{$bg_bold[red]%} %{$reset_color%} "
 else
-PROMPT="%{$bg_bold[yellow]%} %{$reset_color%} %{$fg_bold[yellow]%}%m [%*] [%v]%{$reset_color%} %{$fg_bold[red]%}%~ %{$reset_color%}%
+    PROMPT="%{$bg_bold[magenta]%} %{$reset_color%} %{$fg_bold[magenta]%}%m [%*] [%v]%{$reset_color%} %{$fg_bold[red]%}%~ %{$reset_color%}%
 
-%{$bg_bold[yellow]%} %{$reset_color%} "
+    %{$bg_bold[magenta]%} %{$reset_color%} "
 fi
 
 # set colors of commonly used filetypes
@@ -108,7 +108,6 @@ alias ll='ls --color=auto --group-directories-first -lah'
 alias df='df -h'
 alias bc='bc -l' #enable floating point computations by default
 alias grep='grep --color'
-alias ip='ipython notebook'
 alias astyle='astyle --indent=tab --style=java --delete-empty-lines'
 alias zsh-reload='. ~/.zshrc'
 alias gnuplot='gnuplot -'
@@ -117,10 +116,11 @@ alias md='pandoc -f markdown -t html'
 alias ai='sudo apt-get install'
 alias as='apt-cache search'
 alias pi='yaourt -S'
-alias arch-update='yaourt -Syu'
+alias arch-update='yaourt -Syu --aur'
 alias sync-nas='rsync -aP ~/sync $nas:/share/MD0_DATA/homes/lukas'
+alias latexmk='latexmk -pdf'
 function mdp() {
-	perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
+    perl -p -e 's/\n/\\\n/' $1 | pandoc -o ${1%.*}.pdf
 }
 
 # mount encrypted volume
@@ -134,47 +134,70 @@ alias umount-personal='fusermount -u ~/personal'
 # and that the openconnect script exists in the path
 alias uibk='sudo uibk'
 
+# memory usage overview
+function memusg {
+    ps aux | grep "$@" | awk 'BEGIN{a=0}{a+=$6}END{printf("%.2f\n",a/1e6)}'
+}
+function mem {
+    total='0.0'
+    for app in chrome okular dropbox Xorg skype Mathematica; do
+        m=$(memusg $app)
+        echo $m GB $app
+        total="$(echo "$total+$m" | bc)"
+    done > /tmp/mem_temp
+    cat /tmp/mem_temp | sort -r
+    printf "total usage: %.2fGB (missing: %.2fGB)\n" $(memusg '') $(echo "$(memusg '')-$total" | bc)
+}
+
 # okular makes too much noise
 function okular() {
-	/usr/bin/okular $@ > /dev/null 2>&1 &
+    /usr/bin/okular $@ > /dev/null 2>&1 &
 }
 # evince does the same
 function evince() {
-  /usr/bin/evince $@ > /dev/null 2>&1 &
+    /usr/bin/evince $@ > /dev/null 2>&1 &
+}
+# foxitreader does the same
+function foxit() {
+    /usr/bin/foxitreader $@ > /dev/null 2>&1 &
+}
+
+function ip() {
+    ipython notebook > /dev/null 2>&1 &
 }
 
 # complete pdflatex build (including bibtex)
 function mpdf() {
-	for file in *.tex; do
-		echo "=============================="
-		echo "processing: $file"
-		echo "=============================="
-		pdflatex $file
-		bibtex ${file%.tex}
-		pdflatex $file
-		pdflatex $file
-		latexmk -c
-	done
+    for file in *.tex; do
+        echo "=============================="
+        echo "processing: $file"
+        echo "=============================="
+        pdflatex $file
+        bibtex ${file%.tex}
+        pdflatex $file
+        pdflatex $file
+        latexmk -c
+    done
 }
 function mpdfd() {
-	pdflatex $1
-	bibtex ${1%.tex}
-	pdflatex $1
-	pdflatex $1
-	%rm ${1%.tex}.log ${1%.tex}.aux ${1%.tex}.nav ${1%.tex}.out ${1%.tex}.toc ${1%.tex}.blg ${1%.tex}.bbl
+    pdflatex $1
+    bibtex ${1%.tex}
+    pdflatex $1
+    pdflatex $1
+    rm ${1%.tex}.log ${1%.tex}.aux ${1%.tex}.nav ${1%.tex}.out ${1%.tex}.toc ${1%.tex}.blg ${1%.tex}.bbl
 }
 
 # show battery status
 function battery() {
-	acpi
+    acpi
 }
 # creates tar.gz archive of directory given
 function archive() {
-	tar -czf $(basename $1)-$(/bin/date +%Y%m%d).tar.gz $1
+    tar -czf $(basename $1)-$(/bin/date +%Y%m%d).tar.gz $1
 }
 # calc '...' does a much better job than bc
 function calc() { 
-	awk "BEGIN{ print $* }"
+    awk "BEGIN{ print $* }"
 }
 
 # load computer names
@@ -193,6 +216,9 @@ bindkey '\e.' insert-last-word
 xset -b # turn beep off
 xset s off # turn x black screen saver off
 
+export PATH=$PATH:$HOME/bin
+
+
 PATH="/home/lukas/perl5/bin:/opt/intel/composer_xe_2015/bin${PATH+:}${PATH}"; export PATH;
 PERL5LIB="/home/lukas/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/home/lukas/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
@@ -200,11 +226,6 @@ PERL_MB_OPT="--install_base \"/home/lukas/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/lukas/perl5"; export PERL_MM_OPT;
 
 #export PATH="$PATH:/usr/local/berkeley_upc/bin/"
-
-touch $HOME/.dbus/Xdbus
-chmod 600 $HOME/.dbus/Xdbus
-env | grep DBUS_SESSION_BUS_ADDRESS > $HOME/.dbus/Xdbus
-echo 'export DBUS_SESSION_BUS_ADDRESS' >> $HOME/.dbus/Xdbus
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/mkl/lib/intel64:/opt/intel/lib/intel64/
 

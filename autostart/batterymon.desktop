@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=batterymon-clone
+GenericName=battery applet
+Exec=/usr/bin/batterymon
+Terminal=false
+Type=Application
+StartupNotify=false

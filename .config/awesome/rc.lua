@@ -38,14 +38,15 @@ do
         in_error = false
     end)
 end
--- }}}
+--}}}
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+theme.wallpaper = "/home/lukas/Dropbox/wallpaper.jpg"
 
 -- This is used later as the default terminal and editor to run.
-terminal = "gnome-terminal"
+terminal="terminator"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -283,7 +284,11 @@ globalkeys = awful.util.table.join(
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
+    awful.key({ modkey, "Control" }, "space",  function(c)
+			awful.client.floating.toggle()
+			c.ontop = not c.ontop
+			c.sticky = not c.sticky
+		end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
@@ -298,14 +303,21 @@ clientkeys = awful.util.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
         end),
+  awful.key({ "Shift" }, "F3", function ()
+      awful.util.spawn("amixer set Master 9%+", false) end),
   awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("amixer set Master 9%+", false) end),
+  awful.key({ "Shift" }, "F2", function ()
+       awful.util.spawn("amixer set Master 9%-", false) end),
   awful.key({ }, "XF86AudioLowerVolume", function ()
        awful.util.spawn("amixer set Master 9%-", false) end),
-  awful.key({ }, "XF86MonBrightnessUp", function ()
-      awful.util.spawn("xbacklight -inc 20", false) end),
-  awful.key({ }, "XF86MonBrightnessDown", function ()
-       awful.util.spawn("xbacklight -dec 20", false) end)
+  awful.key({ "Shift" }, "F1", function ()
+       awful.util.spawn("amixer set Master toggle", false) end),
+  awful.key({ "Shift"  }, "F6", function ()
+      awful.util.spawn("xbacklight -inc 10", false) end),
+  awful.key({ "Shift"  }, "F5", function ()
+       awful.util.spawn("xbacklight -dec 10", false) end),
+	awful.key({ modkey,}, "s", function (c) c.sticky = not c.sticky  end)
 )
 
 
@@ -530,3 +542,4 @@ awesome.quit = function()
 		_awesome_quit()
 	end
 end
+

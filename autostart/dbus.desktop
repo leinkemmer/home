@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=dbus
+GenericName=dbus info for cron
+Exec=/home/lukas/bin/dbus-login
+Terminal=false
+Type=Application
+StartupNotify=false

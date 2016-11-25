@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=pnmixer
+GenericName=mixer volume applet
+Exec=/usr/bin/pnmixer
+Terminal=false
+Type=Application
+StartupNotify=false

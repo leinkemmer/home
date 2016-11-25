@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=TouchpadOff
+GenericName=TouchpadOff
+Comment=Turn touchpad off
+Exec=/usr/bin/synclient TouchpadOff=1
+Terminal=false
+Type=Application
+StartupNotify=false

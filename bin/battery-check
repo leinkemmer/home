@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# cron has no access to notify-send
+if [ -r ~/.dbus/Xdbus ]; then
+  . ~/.dbus/Xdbus
+fi
+
+x=$(acpi | awk '{print $4}' | grep -o '[0-9]*')
+y=$(acpi | awk '{print $3}')
+if (( $x < 20 )); then
+	if [[ "$y" == "Discharging," ]]; then
+		/usr/bin/notify-send "$(echo 'Battery low: ' $(acpi))"
+	fi
+fi
+if (( $x < 3 )); then
+	suspend
+fi
+
