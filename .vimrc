@@ -28,7 +28,13 @@ Bundle 'taglist.vim'
 " snippet engine
 Bundle 'SirVer/ultisnips'
 " snippets for ultisnip
-Bundle "honza/vim-snippets"
+Bundle 'honza/vim-snippets'
+" sorround plugin
+Bundle 'tpope/vim-surround'
+" a dependency for what comes below
+Bundle 'kana/vim-textobj-user'
+" select an entire function/if/.. using vif
+Bundle 'kana/vim-textobj-function'
 call vundle#end()
 filetype plugin indent on     " required!
 filetype on
@@ -100,6 +106,11 @@ set autoindent
 set expandtab
 set tabstop=4
 set shiftwidth=4
+"set autoindent
+"set noexpandtab
+"set shiftwidth=2
+"set tabstop=2
+
 " indent preprocessor directives as normal C code
 set cinkeys-=0#
 " syntax highlighting for gnuplot and gnu files
@@ -143,6 +154,7 @@ imap <C-K> <c-o>:pyf /usr/share/clang/clang-format.py<cr>
 " CUDA
 "
 au BufRead,BufNewFile *.cu set filetype=cpp
+au BufRead,BufNewFile *.cuh set filetype=cpp
 
 
 "
@@ -159,4 +171,13 @@ hi link EasyMotionTarget ErrorMsg
 hi link EasyMotionShade  Comment
 hi link EasyMotionTarget2First Search
 hi link EasyMotionTarget2Second Search
+
+" test
+"
+" make a visual selection of the current block va{, make a line selection
+" (otherwise surround does not work) V, surround by curles braces S{, go to
+" insert mode i
+map , va{VS{i
+
+hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
 
