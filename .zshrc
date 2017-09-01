@@ -152,17 +152,17 @@ function mem {
 # okular makes too much noise
 function okular() {
     /usr/bin/okular $@ > /dev/null 2>&1 &
-    disown
+		#disown $!
 }
 # evince does the same
 function evince() {
     /usr/bin/evince $@ > /dev/null 2>&1 &
-    disown
+		#disown $!
 }
 # foxitreader does the same
 function foxit() {
     /usr/bin/foxitreader $@ > /dev/null 2>&1 &
-    disown
+		#disown $!
 }
 
 # suffix aliases allows us to open files without specifying the program

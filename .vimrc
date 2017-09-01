@@ -102,14 +102,14 @@ let g:livepreview_previewer = 'okular'
 " indentation and programming
 "
 " indent using spaces
-set autoindent
-set expandtab
-set tabstop=4
-set shiftwidth=4
 "set autoindent
-"set noexpandtab
-"set shiftwidth=2
-"set tabstop=2
+"set expandtab
+"set tabstop=4
+"set shiftwidth=4
+set autoindent
+set noexpandtab
+set shiftwidth=2
+set tabstop=2
 
 " indent preprocessor directives as normal C code
 set cinkeys-=0#
@@ -134,6 +134,7 @@ autocmd filetype c   nnoremap <F4> :w <bar> exec '!tup upd'<CR>
 autocmd filetype cpp nnoremap <F4> :w <bar> make<CR>
 autocmd filetype python nnoremap <F4> :w <bar> exec '!python '.shellescape('%')<CR>
 autocmd filetype tex nnoremap <F4> :!latexmk -pdf %<CR>
+autocmd filetype markdown nnoremap <F4> :w <bar> make<CR>
 " use Tab to expand snippet and move to next placeholder, C-z jumps back
 let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
@@ -177,7 +178,11 @@ hi link EasyMotionTarget2Second Search
 " make a visual selection of the current block va{, make a line selection
 " (otherwise surround does not work) V, surround by curles braces S{, go to
 " insert mode i
-map , va{VS{i
+"map , va{VS{i
+
+" make a selection of whatever is currently in visual mode
+map , S{i
 
 hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
 
+set wildignore+=tmp
