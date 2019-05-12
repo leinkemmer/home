@@ -1,4 +1,6 @@
-"
+
+
+
 " plugins (managed via vundle)
 " 
 set nocompatible
@@ -8,7 +10,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " let Vundle manage Vundle (required!)
 Bundle 'gmarik/Vundle.vim'
-" my plugins (comments at the end of the line are not allowed by vundle)
+" my plugins (note that comments at the end of the line are not allowed by vundle)
 " colorscheme (dark)
 Bundle 'molokai'
 " colorscheme (light and dark)
@@ -22,19 +24,28 @@ Bundle 'Lokaltog/vim-easymotion'
 " comment/uncomment lines
 Bundle "scrooloose/nerdcommenter"
 " fast file search in .
-Bundle 'Command-T'
+Bundle 'kien/ctrlp.vim'
 " show definitions in current file
-Bundle 'taglist.vim'
+" Bundle 'taglist.vim'
 " snippet engine
-Bundle 'SirVer/ultisnips'
+" Bundle 'SirVer/ultisnips'
 " snippets for ultisnip
-Bundle 'honza/vim-snippets'
+" Bundle 'honza/vim-snippets'
 " sorround plugin
 Bundle 'tpope/vim-surround'
 " a dependency for what comes below
 Bundle 'kana/vim-textobj-user'
 " select an entire function/if/.. using vif
 Bundle 'kana/vim-textobj-function'
+" updates tags and uses tags for syntax highlighting
+Bundle 'xolox/vim-misc.git'
+" Bundle 'xolox/vim-easytags.git'
+" Bundle 'Valloric/YouCompleteMe'
+Bundle 'gauteh/vim-cppman'
+Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+Bundle 'vim-airline/vim-airline'
+Bundle 'vim-airline/vim-airline-themes'
+Bundle 'tpope/vim-fugitive'
 call vundle#end()
 filetype plugin indent on     " required!
 filetype on
@@ -59,30 +70,31 @@ let g:auto_save = 1
 "
 " directory with customized snippets
 "
-set runtimepath+=~/.vim/after/mysnippets
-let g:UltiSnipsSnippetsDir = "~/.vim/after/mysnippets"
-let g:UltiSnipsSnippetDirectories=["mysnippets"]
+" set runtimepath+=~/.vim/after/mysnippets
+" let g:UltiSnipsSnippetsDir = "~/.vim/after/mysnippets"
+" let g:UltiSnipsSnippetDirectories=["mysnippets"]
 
 "
 " customize appearence
 "
-colorscheme github
+"colorscheme github
+colorscheme onehalfdark
+let g:airline_theme='onehalfdark'
 " disable bold fonts (bold fonts are already used in the terminal emulator)
 set t_md=
 " use the molokai color scheme in the terminal
 set t_Co=256
 " make fonts a bit larger in the gui
-set guifont=Inconsolata\ Bold\ 12
+set guifont=Bitstream\ Vera\ Sans\ Mono\ Bold\ 11
 " show more code in the gui version
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
 " display linenumbers
-set number
 " highlight long lines in red
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.\+/
+autocmd FileType c,cpp,python highlight OverLength ctermbg=red ctermfg=white guibg=#FFCCCB
+autocmd FileType c,cpp,python match OverLength /\%81v.\+/
 
 "
 " vim-latexsuite with pdf as default output
@@ -102,14 +114,12 @@ let g:livepreview_previewer = 'okular'
 " indentation and programming
 "
 " indent using spaces
-"set autoindent
-"set expandtab
-"set tabstop=4
-"set shiftwidth=4
 set autoindent
-set noexpandtab
-set shiftwidth=2
-set tabstop=2
+set expandtab
+set tabstop=4
+set shiftwidth=4
+command Tabs   execute "set autoindent | set noexpandtab | set shiftwidth=2 | set tabstop=2"
+command Spaces execute "set autoindent | set expandtab   | set tabstop=4    | set shiftwidth=4"
 
 " indent preprocessor directives as normal C code
 set cinkeys-=0#
@@ -125,20 +135,23 @@ let mapleader = "_"
 "let g:EasyMotion_leader_key = '<Space>'
 nmap <Space> <Plug>(easymotion-bd-w)
 " open command-T and taglist 
-nmap ct <ESC>:CommandT<CR>
+let g:ctrlp_custom_ignore = 'CMakeFiles\|CMakeCache.txt\|git\|build.*'
+set wildignore+=tmp
+nmap ct <ESC>:CtrlP<CR>
+nmap ft <ESC>:CtrlPTag<cr>
 nmap tl <ESC>:TlistOpen<CR>
 " compile using F4
 autocmd filetype gnuplot nnoremap <F4> :w <bar> exec '!gnuplot '.shellescape('%')<CR>
 "autocmd filetype c   nnoremap <F4> :w <bar> make<CR>
 autocmd filetype c   nnoremap <F4> :w <bar> exec '!tup upd'<CR>
 autocmd filetype cpp nnoremap <F4> :w <bar> make<CR>
-autocmd filetype python nnoremap <F4> :w <bar> exec '!python '.shellescape('%')<CR>
+autocmd filetype python nnoremap <F4> :w <bar> exec '!python3 '.shellescape('%')<CR>
 autocmd filetype tex nnoremap <F4> :!latexmk -pdf %<CR>
 autocmd filetype markdown nnoremap <F4> :w <bar> make<CR>
 " use Tab to expand snippet and move to next placeholder, C-z jumps back
-let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+" let g:UltiSnipsExpandTrigger="<Tab>"
+" let g:UltiSnipsJumpForwardTrigger="<Tab>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 " toggle visible tab and newline characters
 nmap <leader>l :set list!<CR>
 set listchars=tab:▸\ ,eol:¬
@@ -173,16 +186,40 @@ hi link EasyMotionShade  Comment
 hi link EasyMotionTarget2First Search
 hi link EasyMotionTarget2Second Search
 
-" test
-"
-" make a visual selection of the current block va{, make a line selection
-" (otherwise surround does not work) V, surround by curles braces S{, go to
-" insert mode i
-"map , va{VS{i
 
-" make a selection of whatever is currently in visual mode
-map , S{i
+" select the body of the current code block (the {} are not selected!) 
+nmap , [{jV]}k
 
+" place { } around whatever is currently in visual mode
+xmap , S{i
+
+" change how matching parans are identified
 hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
 
-set wildignore+=tmp
+
+hi clear SpellBad
+hi SpellBad guibg=#FFCCCB
+hi SpellBad cterm=underline
+
+augroup autodetect
+  autocmd!
+  autocmd BufRead,BufNewFile *.m set filetype=matlab
+augroup END
+autocmd filetype matlab nnoremap <F4> :w <bar> !octave %<CR>
+"set colorcolumn=80
+
+augroup autodetect
+  autocmd!
+  autocmd BufRead,BufNewFile *.mds set filetype=markdownslider
+augroup END
+"autocmd BufNewFile,BufRead *.mds set syntax=markdown
+autocmd filetype markdownslider nnoremap <F4> :w <bar> !slider %<CR>
+
+
+set backspace=indent,eol,start
+
+set textwidth=80
+vmap fm gq
+nmap fm gq$
+
+
